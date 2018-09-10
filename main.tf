@@ -1,8 +1,13 @@
+/*
+ * Copyright (c) 2018, salesforce.com, inc.
+ * All rights reserved.
+ * SPDX-License-Identifier: BSD-3-Clause
+ * For full license text, see the LICENSE file in the repo root or https://opensource.org/licenses/BSD-3-Clause
+ */
 provider "aws" {
   region                  = "${var.region}"
   shared_credentials_file = "${var.credentials_file}"
   profile                 = "${var.profile}"
-
 }
 
 module "my_vpc" {
@@ -13,13 +18,13 @@ module "default_rtb" {
   source = "./modules/route_table/default_rtb"
 
   // Taking value of "default_rtb_id" from "my_vpc" modules out.tf file
-  default_rtb_id = "${module.my_vpc.default_rtb_id}"
+  default_rtb_id    = "${module.my_vpc.default_rtb_id}"
   fw1_trust_intf_id = "${module.fw1_trust_intf.fw1_trust_intf_id}"
 }
 
 module "fw_trust_rtb" {
-  source                 = "./modules/route_table/fw_trust_rtb"
-  vpc_id                 = "${module.my_vpc.vpc_id}"
+  source            = "./modules/route_table/fw_trust_rtb"
+  vpc_id            = "${module.my_vpc.vpc_id}"
   fw1_trust_intf_id = "${module.fw1_trust_intf.fw1_trust_intf_id}"
 }
 
@@ -27,36 +32,37 @@ module "fw_untrust_rtb" {
   source               = "./modules/route_table/fw_untrust_rtb"
   vpc_id               = "${module.my_vpc.vpc_id}"
   fw_untrust_subnet_id = "${module.fw_untrust_subnet.fw_untrust_subnet_id}"
-  igw_id = "${module.internet_gateway.igw_id}"
+  igw_id               = "${module.internet_gateway.igw_id}"
 }
 
 module "natgw_rtb" {
-  source            = "./modules/route_table/natgw_rtb"
-  vpc_id            = "${module.my_vpc.vpc_id}"
+  source   = "./modules/route_table/natgw_rtb"
+  vpc_id   = "${module.my_vpc.vpc_id}"
   natgw_id = "${module.nat_gateway.natgw_id}"
 }
+
 module "fw_trust_subnet" {
   source = "./modules/subnet/fw_trust_subnet"
   vpc_id = "${module.my_vpc.vpc_id}"
-  az = "${var.az}"
+  az     = "${var.az}"
 }
 
 module "fw_untrust_subnet" {
   source = "./modules/subnet/fw_untrust_subnet"
   vpc_id = "${module.my_vpc.vpc_id}"
-  az = "${var.az}"
+  az     = "${var.az}"
 }
 
 module "fw_ha_subnet" {
   source = "./modules/subnet/fw_ha_subnet"
   vpc_id = "${module.my_vpc.vpc_id}"
-  az = "${var.az}"
+  az     = "${var.az}"
 }
 
 module "fw_mgmt_subnet" {
   source = "./modules/subnet/fw_mgmt_subnet"
   vpc_id = "${module.my_vpc.vpc_id}"
-  az = "${var.az}"
+  az     = "${var.az}"
 }
 
 module "internet_gateway" {
@@ -78,6 +84,7 @@ module "default_sg" {
   source = "./modules/security_groups/default_sg"
   vpc_id = "${module.my_vpc.vpc_id}"
 }
+
 module "fw_untrust_sg" {
   source = "./modules/security_groups/fw_untrust_sg"
   vpc_id = "${module.my_vpc.vpc_id}"
@@ -124,9 +131,9 @@ module "fw1_mgmt_intf" {
 
 # Creating Instances
 module "fw1-instance" {
-  source = "./modules/instances/fw1"
-  fw1_trust_intf_id = "${module.fw1_trust_intf.fw1_trust_intf_id}"
+  source              = "./modules/instances/fw1"
+  fw1_trust_intf_id   = "${module.fw1_trust_intf.fw1_trust_intf_id}"
   fw1_untrust_intf_id = "${module.fw1_untrust_intf.fw1_untrust_intf_id}"
-  fw1_ha_intf_id = "${module.fw1_ha_intf.fw1_ha_intf_id}"
-  fw1_mgmt_intf_id = "${module.fw1_mgmt_intf.fw1_mgmt_intf_id}"  
+  fw1_ha_intf_id      = "${module.fw1_ha_intf.fw1_ha_intf_id}"
+  fw1_mgmt_intf_id    = "${module.fw1_mgmt_intf.fw1_mgmt_intf_id}"
 }

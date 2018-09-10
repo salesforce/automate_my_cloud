@@ -1,3 +1,10 @@
+/*
+ * Copyright (c) 2018, salesforce.com, inc.
+ * All rights reserved.
+ * SPDX-License-Identifier: BSD-3-Clause
+ * For full license text, see the LICENSE file in the repo root or https://opensource.org/licenses/BSD-3-Clause
+ */
+
 # AMI ID LIST
 # N. Virginia	us-east-1 	ami-448d513b
 # Ohio	us-east-2 	ami-dbd7e7be
@@ -34,4 +41,3 @@ variable "fw1_trust_intf_id" {}
 variable "fw1_untrust_intf_id" {}
 variable "fw1_ha_intf_id" {}
 variable "fw1_mgmt_intf_id" {}
-
